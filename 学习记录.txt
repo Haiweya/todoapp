@@ -1,0 +1,71 @@
+例如：p.abc{
+color:red;
+}
+类名是abc的标签p的颜色是red
+
+last-of-type  选择的是列表中的最后一个元素
+
+数据库的话换成自己的MySQL数据库数据库名称为todo
+
+trim 方法可以把文本中的空格给过滤掉。
+  // data = data.filter(function(todo) {
+        //      return req.params.item !==todo.items;    //过滤掉数组中相同的部分，返回不相同的部分。
+        //  });
+        //  res.json(data);//把数据返回到页面
+
+   connection.find({content:req.params.item}).remove(function(err,data){   //find is not a function
+               if(err) throw  err;
+               console.log(data);
+           });  这种也是不好使的。
+
+
+
+           var sql = 'delete from todoapp where content = "'+req.params.item+'" ';  /果然要遮阳拼接才好使
+
+
+    从数据库中读出数据并且写入文件
+    connection.query('SELECT * FROM Table',
+         function(err, rows, fields){ if(err)   {
+             throw err;
+         }else{
+    var fite = '';
+           for (var i in rows) {
+              fite += rows[i].field1 + '\t';
+              fite += rows[i].field2 + '\n';
+           }
+    fs.writeFile( 'C:\\folder\\test.txt', fite, function (err) {
+                        if (err) throw err;
+                             console.log('Saved!');
+                        });
+    }
+
+    mysql还支持多语句查询，但是由于某些安全原因（官方解释是因为如果值没有正确解析会导致SQL注入攻击）默认是被禁止的。那么让我们来打开这个“潘多拉魔盒”把。
+    在创建数据库连接时首先把这个功能开启。
+    let connection = mysql.createConnection({
+     // 其他配置
+     multipleStatements: true,
+    });
+    然后我们就可以使用多语句查询了。
+
+    connection.query(
+     {
+     sql: `select * from book where username = ?;
+      select * from book where username = ?;`,
+     },
+     ['ace','xyf'],
+     function(err, rows, fields) {
+     if (err) throw err;
+     console.log('The solution is: ', rows);
+     }
+    );
+
+    <% include ../public/nav.ejs %>
+      <li><%=todo.content.replace("'","")%>
+
+      var reg = /^[\'\"]+|[\'\"]+$/g;
+      var str = "";
+      str=str.replace(reg,"");
+
+      这种方式好使
+      <% reg =/^[\'\"]+|[\'\"]+$/g%>
+                  <li><%=todo.content.replace(reg,"")%>
